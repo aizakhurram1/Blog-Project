@@ -23,46 +23,57 @@ class PostResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+
             ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(2848)
-                    ->reactive()
-                    ->afterStateUpdated(function (Closure $set, $state) {
-                        $set('slug', Str::slug($state));
-                    }),
-                Forms\Components\TextInput::make('slug')
-                    ->required()
-                    ->maxLength(2848),
-                Forms\Components\TextInput::make('thumbnail')
-                    ->maxLength(2848),
-                Forms\Components\Textarea::make('body')
-                    ->required(),
-                Forms\Components\Toggle::make('active')
-                    ->required(),
-                Forms\Components\DateTimePicker::make('published_at')
-                    ->required(),
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'email')
-                    ->required(),
-            ]);
+
+                Forms\Components\Card::make()
+                    ->schema([
+                        Forms\Components\Grid::make()
+                            ->schema([
+                                Forms\Components\TextInput::make('title')
+                                    ->required()
+                                    ->maxLength(2848)
+                                    ->reactive()
+                                    ->afterStateUpdated(function (Closure $set, $state) {
+                                        $set('slug', Str::slug($state));
+                                    }),
+                                Forms\Components\TextInput::make('slug')
+                                    ->required()
+                                    ->maxLength(2848),
+
+                            ]),
+
+                        Forms\Components\RichEditor::make('body')
+                            ->required(),
+                        Forms\Components\Toggle::make('active')
+                            ->required(),
+                        Forms\Components\DateTimePicker::make('published_at')
+                            ->required(),
+                    ])->columnSpan(8),
+
+                Forms\Components\Card::make()
+                    ->schema([
+                        Forms\Components\FileUpload::make('thumbnail'),
+                        Forms\Components\Select::make('category_id')
+                            ->multiple()
+                            ->relationship('categories', 'title'),
+
+                    ])->columnSpan(4),
+
+            ])->columns(12);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('thumbnail'),
                 Tables\Columns\TextColumn::make('title'),
-                Tables\Columns\TextColumn::make('slug'),
-                Tables\Columns\TextColumn::make('thumbnail'),
-                Tables\Columns\TextColumn::make('body'),
                 Tables\Columns\IconColumn::make('active')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('published_at')
                     ->dateTime(),
-                Tables\Columns\TextColumn::make('user_id'),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
+                // Tables\Columns\TextColumn::make('user_id'),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime(),
             ])
