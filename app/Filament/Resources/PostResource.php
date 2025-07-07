@@ -47,16 +47,28 @@ class PostResource extends Resource
                             ->required(),
                         Forms\Components\Toggle::make('active')
                             ->required(),
-                        Forms\Components\DateTimePicker::make('published_at')
-                            ->required(),
+                        Forms\Components\DateTimePicker::make('published_at'),
+
                     ])->columnSpan(8),
 
                 Forms\Components\Card::make()
                     ->schema([
-                        Forms\Components\FileUpload::make('thumbnail'),
-                        Forms\Components\Select::make('category_id')
+                        Forms\Components\FileUpload::make('thumbnail')
+                            ->image()
+                            ->directory('thumbnails')     // Stores in storage/app/public/thumbnails
+                            ->disk('public')              // Make sure your filesystem disk is correct
+                            ->visibility('public')
+                            ->preserveFilenames()
+                            ->imagePreviewHeight('150')
+                            ->loadingIndicatorPosition('left')
+                            ->panelAspectRatio('2:1')
+                            ->removeUploadedFileButtonPosition('right')
+                            ->uploadButtonPosition('left')
+                            ->uploadProgressIndicatorPosition('left'),
+                        Forms\Components\Select::make('categories')
                             ->multiple()
-                            ->relationship('categories', 'title'),
+                            ->relationship('categories', 'title')
+                            ->required(),
 
                     ])->columnSpan(4),
 
