@@ -4,7 +4,7 @@
 
         @foreach ($categories as $category)
             
-            <a href="#" class="text-semibold block py-2 px-3 rounded">
+            <a href="{{route('by-category', $category)}}" class="text-semibold block py-2 px-3 rounded">
 
                 {{$category->title}} ({{$category->total}})
             </a>
