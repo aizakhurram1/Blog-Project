@@ -13,7 +13,7 @@ class AppLayout extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(public ?string $meta_title = null, public ?string $meta_description = null)
     {
         //
     }

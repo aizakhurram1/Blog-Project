@@ -7,7 +7,7 @@ use Tests\DuskTestCase;
 
 uses(DuskTestCase::class);
 
-it('if the categories page is opened', function () {
+it('shows if the categories page is opened', function () {
     $admin = User::find(1);
 
     $this->browse(function (Browser $browser) use ($admin) {

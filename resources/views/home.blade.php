@@ -1,4 +1,4 @@
-   <x-app-layout>
+   <x-app-layout meta-description="doing Blog project on laravel sitting in office when the weather outside is so good">
    <section class="w-full md:w-2/3 flex flex-col items-center px-3">
 
     @foreach ($posts as $post)

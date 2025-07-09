@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout meta-title="about my sad corporate life" meta-description="hehehehe">
      <!-- Post Section -->
         <section class="w-full  flex flex-col items-center px-3">
 

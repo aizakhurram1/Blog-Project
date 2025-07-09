@@ -6,13 +6,13 @@ use Tests\DuskTestCase;
 
 uses(DuskTestCase::class);
 
-it('user can log in via the Filament login page', function () {
-    $this->browse(function (Browser $browser) {
-        // $user = User::find(1);
+it('logs user in', function () {
+    $admin = User::find(1);
 
-        $browser
-            ->visit('/admin/login')
-            ->assertPathIs('/admin/login');
-        $browser->screenshot('login');
+    $this->browse(function (Browser $browser) use ($admin) {
+        $browser->loginAs($admin)
+            ->visit('/admin')
+            ->assertPathIs('/admin');
+
     });
 });
