@@ -3,15 +3,15 @@
 namespace App\View\Components;
 
 use App\Models\Category;
-use Closure;
 use DB;
-use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use Illuminate\View\View;
+use Mockery\Matcher\Closure;
 
 class AppLayout extends Component
 {
     /**
-     * Create a new component instance.
+     * Get the view / contents that represents the component.
      */
     public function __construct(public ?string $meta_title = null, public ?string $meta_description = null)
     {
