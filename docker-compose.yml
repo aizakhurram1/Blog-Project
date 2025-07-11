@@ -24,6 +24,7 @@ services:
         depends_on:
             - mysql
             - selenium
+            - mailpit
 
     mysql:
         image: 'mysql/mysql-server:8.0'
@@ -56,6 +57,11 @@ services:
             - /dev/shm:/dev/shm
         networks:
             - sail
+    mailpit:
+        image: axllent/mailpit
+        ports:
+          - "8025:8025"  # Web UI
+          - "1025:1025"  # SMTP
 
 networks:
     sail:
