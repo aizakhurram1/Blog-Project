@@ -18,6 +18,10 @@ return [
         'passwords' => 'users',
     ],
 
+    'admin' => [
+        'driver' => 'session',
+        'provider' => 'users',
+    ],
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards

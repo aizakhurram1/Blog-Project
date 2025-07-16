@@ -10,6 +10,8 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class PostResource extends Resource
@@ -122,5 +124,26 @@ class PostResource extends Resource
             'view' => Pages\ViewPost::route('/{record}'),
             'edit' => Pages\EditPost::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $user = Auth::user();
+
+        if ($user->hasRole('admin')) {
+            return parent::getEloquentQuery(); // Admins see everything
+        }
+
+        return parent::getEloquentQuery()->where('user_id', $user->id); // Users see only their posts
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return $record->user_id === Auth::id() || Auth::user()->hasRole('admin');
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return $record->user_id === Auth::id() || Auth::user()->hasRole('admin');
     }
 }

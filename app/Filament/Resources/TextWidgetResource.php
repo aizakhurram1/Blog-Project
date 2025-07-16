@@ -9,6 +9,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Support\Facades\Auth;
 
 class TextWidgetResource extends Resource
 {
@@ -67,6 +68,11 @@ class TextWidgetResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return Auth::user()->hasRole('admin');
     }
 
     public static function getPages(): array
