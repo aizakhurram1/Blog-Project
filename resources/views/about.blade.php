@@ -8,7 +8,7 @@
                         <img src="{{ $widget->image }}" alt="Image">
                     </a>
                     <div class="bg-white flex flex-col justify-start p-6">
-                    <h1 class="text-3xl font-bold hover:text-gray-700 pb-4">{{$widget->title}}</h1>
+                    <h1 class="text-3xl font-bold hover:text-gray-700 pb-4">{{ $widget->title }}</h1>
                     </div>
                     <div>
                         {!! $widget->body !!}
