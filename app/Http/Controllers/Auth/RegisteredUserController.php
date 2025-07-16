@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -32,20 +32,51 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
         ]);
 
+        $name = $request->name;
+        $email = $request->email;
+
+        $verificationUrl = URL::temporarySignedRoute(
+            'verify.registration',
+            now()->addMinutes(60),
+            ['email' => $email, 'name' => $name]
+        );
+
+        Mail::raw("Click to verify and complete your registration: $verificationUrl", function ($message) use ($email) {
+            $message->to($email)
+                ->subject('Verify your email');
+        });
+
+        return redirect()->back()->with('status', 'Verification link sent! Check your email.');
+    }
+
+    public function verifyEmail(Request $request): RedirectResponse
+    {
+
+        if (! $request->hasValidSignature()) {
+            abort(403, 'Invalid or expired verification link.');
+        }
+
+        $email = $request->email;
+        $name = $request->name;
+
+        if (User::where('email', $email)->exists()) {
+            return redirect('/')->with('status', 'You are already registered. Please log in.');
+        }
+
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name' => $name,
+            'email' => $email,
+            'email_verified_at' => Carbon::now(),
+
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect('/')->with('status', 'You are now registered and logged in!');
     }
 }

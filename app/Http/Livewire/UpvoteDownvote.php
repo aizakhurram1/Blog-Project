@@ -35,6 +35,8 @@ class UpvoteDownvote extends Component
                 'user_id' => $user->id,
             ]);
 
+            //  ! $user->posts()->dislikes()->exists() ? $user->posts()->dislikes()->attach() : null;
+
             return;
         }
         if ($upvote && $model->is_upvote || ! $upvote && ! $model->is_upvote) {
